@@ -1,15 +1,20 @@
+
 require("dotenv").config();
 
-// var spotify = new Spotify(keys.spotify);
-var client = new Twitter(keys.twitter);
+var Spotify = require('node-spotify-api');
+var Twitter = require('twitter');
 var keys = require('./keys.js');
 var request = require("request");
-var Twitter = require('twitter');
-var spotify = require('spotify');
 var fs = require('fs');
+var client = new Twitter(keys.twitter);
+
+var spotify = new Spotify(keys.spotify);
+
+
+
 
 var nodeArgv = process.argv;
-var command = process.arg[2];
+var command = process.argv[2];
 
 var movSong = "";
 
@@ -32,7 +37,7 @@ switch(command){
     if(movSong){
         spotifysong(movSong);
     }else{
-        spoifysong("What They Do")
+        spotifysong("What They Do")
     }
     break;
 
@@ -57,20 +62,22 @@ function displayTweets (){
         if(!error){
             for(var i =0; i < tweets.length; i++){
                 var date = tweets[i].created_at;
-                console.log("@donaldwhite84" + tweets[i].text + "Created at:" + date.substring(0,19));
-                console.log("------------");
 
-                fs.appendFile('log.txt', "@donaldwhite84:", + tweets[i].text + "Created at:" + date.substring(0,19));
-                fs.appendFile('log.txt', "-------------");
+                 console.log("@donaldwhite84" + tweets[i].text + "Created at:" + date.substring(0,19));
+                 console.log("------------");
+
+                //  fs.appendFile('log.txt', "@donaldwhite84:", + tweets[i].text + "Created at:" + date.substring(0,19));
+            //      fs.appendFile('log.txt', "-------------");
+            // 
             }
 
         }else{
-            console.log("error");
+            console.log(error);
         }
     })
 }
 
-function spoifysong(song){
+function spotifysong(song){
     spotify.search({type:'track', query:song}, function(error,data){
         if(!error){
             for(var i=0; i < data.tracks.items.length; i++){
@@ -82,11 +89,11 @@ function spoifysong(song){
                 console.log("Album:" + song.album.name);
                 console.log("-------------------------");
 
-                fs.appendFile('log.txt',song.artists[0].name);
-                fs.appendFile('log.txt',song.name);
-                fs.appendFile('log.txt',song.preview_url);
-                fs.appendFile('log.txt',song.album.name);
-                fs.appendFile('log.txt',"-------------------------");
+                // fs.appendFile('log.txt',song.artists[0].name);
+                // fs.appendFile('log.txt',song.name);
+                // fs.appendFile('log.txt',song.preview_url);
+                // fs.appendFile('log.txt',song.album.name);
+                // fs.appendFile('log.txt',"-------------------------");
                 
 
             }
@@ -97,7 +104,7 @@ function spoifysong(song){
 
 }
 
-function omdbData(movie){
+function omdbData (movie){
 
     var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
 
@@ -114,31 +121,31 @@ function omdbData(movie){
     console.log("Plot: " + JSON.parse(body).Plot);
     console.log("Actors: " + JSON.parse(body).Actors);
 
-    fs.appendFile('log.txt',"Title: " + JSON.parse(body).Title);
-    fs.appendFile('log.txt',"Year: " + JSON.parse(body).Year);
-    fs.appendFile('log.txt',"IMBD Rating: " + JSON.parse(body).imdbRating);
-    fs.appendFile('log.txt',"Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[2].Source); 
-    fs.appendFile('log.txt',"Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[2].Value);  
-    fs.appendFile('log.txt',"Country: " + JSON.parse(body).Country);
-    fs.appendFile('log.txt',"Language   " + JSON.parse(body).Language);
-    fs.appendFile('log.txt',"Plot: " + JSON.parse(body).Plot);
-    fs.appendFile('log.txt',"Actors: " + JSON.parse(body).Actors);
+    // fs.appendFile('log.txt',"Title: " + JSON.parse(body).Title);
+    // fs.appendFile('log.txt',"Year: " + JSON.parse(body).Year);
+    // fs.appendFile('log.txt',"IMBD Rating: " + JSON.parse(body).imdbRating);
+    // fs.appendFile('log.txt',"Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[2].Source); 
+    // fs.appendFile('log.txt',"Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[2].Value);  
+    // fs.appendFile('log.txt',"Country: " + JSON.parse(body).Country);
+    // fs.appendFile('log.txt',"Language   " + JSON.parse(body).Language);
+    // fs.appendFile('log.txt',"Plot: " + JSON.parse(body).Plot);
+    // fs.appendFile('log.txt',"Actors: " + JSON.parse(body).Actors);
   }else{
       console.log(error)
   }
-  if(movie==="Mr. nobody"){
+  if(movie ==="Mr. nobody"){
       console.log("--------------------");
       console.log("If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
       console.log("It's on Netflix!");
 
-      fs.appendFile('log.txt', "-----------------------");
+      fs.appendFileSynch('log.txt', "-----------------------");
       fs.appendFile('log.txt', "If you haven't watched 'Mr. Nobody,' then you should: http://www.imdb.com/title/tt0485947/");
       fs.appendFile('log.txt', "It's on Netflix!");
   }
 });
 }
 
-function doThing(){
+function doThing (){
     fs.readFile('random.txt', "utf8", function(error, data){
       var txt = data.split(',');
   
